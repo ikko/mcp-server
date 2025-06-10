@@ -1,0 +1,127 @@
+```json
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "MCP Schedule API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/schedule": {
+      "post": {
+        "summary": "Create a new schedule entry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job scheduled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "cron": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/schedules": {
+      "get": {
+        "summary": "List active cron jobs",
+        "responses": {
+          "200": {
+            "description": "List of scheduled jobs",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule": {
+      "delete": {
+        "summary": "Delete a schedule entry by command",
+        "parameters": [
+          {
+            "name": "command",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact command string to match for deletion"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching job(s) deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted_count": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No matching job found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScheduleInput": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "example": "every day at 5pm"
+          },
+          "command": {
+            "type": "string",
+            "example": "echo hello"
+          }
+        },
+        "required": ["expression", "command"]
+      },
+      "ScheduleEntry": {
+        "type": "object",
+        "properties": {
+          "schedule": { "type": "string" },
+          "command": { "type": "string" },
+          "mcp_managed": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
+```
