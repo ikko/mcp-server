@@ -1,6 +1,6 @@
 # mcp-server
 
-A modular server framework for various MCP (Model Context Protocol) services.
+A modular server framework for managing and orchestrating various MCP (Mission Control Platform) services.
 
 ## Components
 
@@ -13,14 +13,6 @@ A minimalist crontab management server and CLI tool built with FastAPI, Typer, a
 - FastAPI server with switchable transport: stdio or SSE
 - CLI support using `typer`
 
-### [Claude Configuration](./mcp-schedule/claude-config/README.md)
-
-Integration with Claude AI to enhance natural language processing capabilities:
-
-- Convert complex human-readable scheduling expressions to crontab syntax
-- Claude Desktop integration via Tools API
-- Custom prompt templates for scheduling scenarios
-
 ## Project Structure
 
 ```
@@ -28,11 +20,7 @@ mcp-server/
 ├── mcp-schedule/             # Crontab management service
 │   ├── mcp_schedule_server.py  # Main server and CLI implementation
 │   ├── requirements.txt        # Python dependencies
-│   ├── README.md               # Component documentation
-│   └── claude-config/          # Claude AI integration
-│       ├── claude_desktop_config_sample.json  # Claude Desktop configuration
-│       ├── claude_tools_mcp_schedule.json     # Claude Tools API schema
-│       └── README.md           # Claude integration documentation
+│   └── README.md               # Component documentation
 ├── README.md                 # This file
 └── ...                       # Other MCP components (future)
 ```
@@ -49,13 +37,6 @@ pip install -r requirements.txt
 python mcp_schedule_server.py --help
 ```
 
-To set up Claude integration:
-
-```bash
-cd mcp-schedule/claude-config
-# Follow the instructions in README.md to configure Claude Desktop
-```
-
 ## Architecture
 
 The MCP Server is designed as a collection of modular services that can be deployed independently or together. Each service follows these design principles:
@@ -65,7 +46,6 @@ The MCP Server is designed as a collection of modular services that can be deplo
 - CLI interface with Typer
 - Rich terminal output formatting
 - Environment-configurable behavior
-- AI integration capabilities
 
 ## Development
 
@@ -73,7 +53,6 @@ The MCP Server is designed as a collection of modular services that can be deplo
 
 - Python 3.8+
 - Required system packages (varies by component)
-- Claude Desktop (optional, for AI integration)
 
 ### Contributing
 
@@ -85,4 +64,17 @@ The MCP Server is designed as a collection of modular services that can be deplo
 
 ## License
 
-[MIT](LICENSE) (or follow the upstream licenses of the references in requirements.txt and pyproject.toml files)
+MIT (or follow the upstream licenses of the references)
+```
+
+This README provides:
+
+1. A clear introduction to the mcp-server project
+2. A link to the mcp-schedule component with a brief description
+3. The overall project structure
+4. Getting started instructions
+5. Architecture overview
+6. Development prerequisites and contribution guidelines
+7. License information
+
+The structure is designed to be expandable as you add more components to the mcp-server project in the future. Each component can maintain its own detailed README while this main README serves as an entry point and overview of the entire system.

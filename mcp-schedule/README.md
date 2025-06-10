@@ -51,7 +51,7 @@ uvicorn mcp_schedule_server:app --reload
 #### POST /schedule
 
 ```bash
-curl -X POST http://localhost:8000/schedule \
+curl -X POST http://localhost:8428/schedule \
   -H "Content-Type: application/json" \
   -d '{"expression": "every day at 5pm", "command": "echo hello"}'
 ```
@@ -59,7 +59,7 @@ curl -X POST http://localhost:8000/schedule \
 #### GET /schedules
 
 ```bash
-curl http://localhost:8000/schedules
+curl http://localhost:8428/schedules
 ```
 
 If `TRANSPORT=sse`, use an SSE client like [curl with --no-buffer](https://curl.se/docs/manpage.html) or browser EventSource API.
@@ -113,9 +113,3 @@ sudo systemctl start cron
 ## License
 
 MIT (or follow the upstream licenses of the references).
-
-## Related Projects
-
-* [https://github.com/kunjanshah0811/MCP-Terminal-Server](https://github.com/kunjanshah0811/MCP-Terminal-Server)
-* [https://www.claudemcp.com/servers/filesystem](https://www.claudemcp.com/servers/filesystem)
-* [https://pypi.org/project/crontab/](https://pypi.org/project/crontab/)
