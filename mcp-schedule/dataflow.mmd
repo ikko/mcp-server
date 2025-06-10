@@ -1,0 +1,20 @@
+graph TD
+    A[User Input] -->|CLI or HTTP POST| B[Scheduler Entry Parser]
+    B --> C{Expression Type?}
+    C -->|Crontab Syntax| D[Directly use crontab expression]
+    C -->|Human-friendly| E[Parse to Cron via NLP stub]
+    D --> F[Build ScheduleEntry model]
+    E --> F
+    F --> G[Append to system crontab]
+    G --> H[Tag as MCP Managed with hashmark mcp]
+    H --> I[Persist via python-crontab]
+
+    subgraph Query Flow
+      J[HTTP GET /schedules or CLI list] --> K[Load crontab entries]
+      K --> L{Filter MCP_ONLY?}
+      L -->|Yes| M[Filter by comment 'mcp']
+      L -->|No| N[Return all jobs]
+      M --> O[Build ScheduleEntry list]
+      N --> O
+      O --> P[Return via stdio or SSE]
+    end

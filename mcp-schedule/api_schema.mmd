@@ -1,0 +1,38 @@
+classDiagram
+    class ScheduleInput {
+        +str expression
+        +str command
+    }
+
+    class ScheduleEntry {
+        +str schedule
+        +str command
+        +bool mcp_managed
+        +to_crontab() str
+        +from_crontab_line(line: str) ScheduleEntry
+    }
+
+    class MCPSettings {
+        +bool mcp_only
+        +Literal["stdio", "sse"] transport
+    }
+
+    class FastAPI
+    class Request
+    class Response
+
+    FastAPI <|-- schedule_job
+    FastAPI <|-- list_jobs
+
+    schedule_job : POST /schedule
+    schedule_job --> ScheduleInput
+    schedule_job --> ScheduleEntry
+    schedule_job --> Response
+
+    list_jobs : GET /schedules
+    list_jobs --> MCPSettings
+    list_jobs --> ScheduleEntry
+    list_jobs --> Response
+
+    MCPSettings <.. ScheduleEntry
+    ScheduleInput <.. ScheduleEntry

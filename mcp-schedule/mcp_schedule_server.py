@@ -84,6 +84,24 @@ def display_schedules(entries: List[ScheduleEntry]):
 
     console.print(table)
 
+def delete_schedules(command: Optional[str] = None, comment: Optional[str] = None, preview: bool = True):
+    if not command and not comment:
+        raise ValueError("Must provide either 'command' or 'comment'")
+
+    cron = CronTab(user=True)
+    matched_jobs = []
+    for job in cron:
+        if (command and job.command == command) or (comment and job.comment == comment):
+            matched_jobs.append(job)
+
+    if preview:
+        return 0, matched_jobs  # simulate deletion
+
+    for job in matched_jobs:
+        cron.remove(job)
+    cron.write()
+    return len(matched_jobs), matched_jobs
+
 # ---------------------- FastAPI Routes ----------------------
 @app.post("/schedule")
 async def schedule_job(input: ScheduleInput):
@@ -111,6 +129,17 @@ async def list_jobs(request: Request):
         return EventSourceResponse(event_generator())
     return StreamingResponse((f"{e.to_crontab()}\n" for e in entries), media_type="text/plain")
 
+@app.delete("/schedule")
+async def delete_schedule(request: Request, command: Optional[str] = None, comment: Optional[str] = None, preview: bool = True):
+    try:
+        deleted_count, matched = delete_schedules(command, comment, preview)
+        return {
+            "deleted_count": deleted_count,
+            "matched_jobs": [ScheduleEntry(schedule=str(job.slices), command=job.command, mcp_managed=(job.comment == 'mcp')) for job in matched]
+        }
+    except ValueError as e:
+        return {"error": str(e)}
+
 # ---------------------- CLI ----------------------
 @cli.command()
 def list():
@@ -129,6 +158,21 @@ def add(expression: str, command: str):
         console.print(f"[bold green]Scheduled:[/bold green] {entry.to_crontab()}")
     except Exception as e:
         console.print(f"[bold red]Error:[/bold red] {e}")
+
+@cli.command()
+def delete(command: Optional[str] = typer.Option(None), comment: Optional[str] = typer.Option(None), preview: bool = True):
+    try:
+        deleted_count, matched = delete_schedules(command, comment, preview)
+        if preview:
+            console.print(f"[bold yellow]Preview:[/bold yellow] Found {len(matched)} matching jobs:")
+        else:
+            console.print(f"[bold red]Deleted {deleted_count} job(s)[/bold red]")
+
+        for job in matched:
+            console.print(f" - {job}")
+    except ValueError as e:
+        console.print(f"[bold red]Error:[/bold red] {e}")
+
 
 if __name__ == "__main__":
     cli()

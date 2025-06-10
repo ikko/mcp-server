@@ -1,0 +1,8 @@
+python-crontab
+pydantic-settings
+pydantic>=2.0
+rich
+fastapi
+sse-starlette
+typer
+uvicorn
