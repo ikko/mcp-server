@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcp-schedule": {
+      "command": "uvicorn",
+      "args": [
+        "mcp_schedule_server:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8428"
+      ]
+    }
+  },
+  "toolSchemas": [
+    "./claude_tools_mcp_schedule.json"
+  ]
+}

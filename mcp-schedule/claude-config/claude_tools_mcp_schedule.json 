@@ -1,0 +1,66 @@
+{
+  "name": "MCP Schedule",
+  "description": "Natural language to crontab scheduler using mcp-schedule server.",
+  "tools": [
+    {
+      "name": "schedule_job",
+      "description": "Schedule a system job using a human-friendly expression and command.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "Natural language or crontab expression (e.g. 'every day at 5pm' or '0 17 * * *')"
+          },
+          "command": {
+            "type": "string",
+            "description": "Shell command to run (e.g. 'echo hello')"
+          }
+        },
+        "required": ["expression", "command"]
+      },
+      "api": {
+        "type": "openapi",
+        "url": "http://localhost:8428/openapi.json",
+        "endpoint": "POST /schedule"
+      }
+    },
+    {
+      "name": "list_jobs",
+      "description": "List scheduled cron jobs",
+      "input_schema": { "type": "object", "properties": {} },
+      "api": {
+        "type": "http",
+        "method": "GET",
+        "url": "http://localhost:8428/schedules"
+      }
+    },
+    {
+      "name": "delete_job",
+      "description": "Preview or delete a scheduled job using the command or comment tag",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Exact shell command to delete"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment tag to match (e.g. 'mcp')"
+          },
+          "preview": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to preview only (true) or actually delete"
+          }
+        }
+      },
+      "api": {
+        "type": "http",
+        "method": "DELETE",
+        "url": "http://localhost:8428/schedule"
+      }
+    }
+  ]
+}
